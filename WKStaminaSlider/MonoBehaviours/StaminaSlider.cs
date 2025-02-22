@@ -15,6 +15,7 @@ namespace WKStaminaSlider.MonoBehaviours
 
         bool hidden;
 
+        bool isLeft;
 
         void Start()
         {
@@ -23,6 +24,9 @@ namespace WKStaminaSlider.MonoBehaviours
             canvasGroup.alpha = 0;
             rectTransform = GetComponent<RectTransform>();
             initalPosition = rectTransform.anchoredPosition.x;
+            rectTransform.anchoredPosition = Vector2.zero; // Start animation fix
+
+            WKStaminaSliderPlugin.onColorConfigChange.AddListener(OnColorValuesChanged);
 
             if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) Toggle();
         }
@@ -40,13 +44,13 @@ namespace WKStaminaSlider.MonoBehaviours
 
             if (hidden && hand.gripStrength < slider.maxValue) Toggle();
             else if (!hidden && hand.gripStrength >= slider.maxValue) Toggle();
-
         }
         
-        public void Setup(CL_Player.Hand hand, Slider slider)
+        public void Setup(CL_Player.Hand hand, Slider slider, bool isLeft)
         {
             this.hand = hand;
             this.slider = slider;
+            this.isLeft = isLeft;
 
             slider.maxValue = hand.gripStrength;
         }
@@ -55,20 +59,35 @@ namespace WKStaminaSlider.MonoBehaviours
         {
             hidden = !hidden;
 
+            int xPos = WKStaminaSliderPlugin.staminaDistanceFromCenter.Value;
+            if (isLeft) xPos *= -1;
+
             if (hidden)
             {
                 canvasGroup.DOFade(0, 0.25f).SetEase(Ease.OutQuart);
 
-                rectTransform.DOAnchorPosX(initalPosition + (initalPosition < 0 ? 75 : -75),
+                rectTransform.DOAnchorPosX(xPos + (xPos < 0 ? 75 : -75),
                     WKStaminaSliderPlugin.staminaTransitionSpeed.Value).SetEase(Ease.OutQuart);
             }
             else
             {
                 canvasGroup.DOFade(1, 0.25f).SetEase(Ease.OutQuart);
 
-                rectTransform.DOAnchorPosX(initalPosition,
-                    WKStaminaSliderPlugin.staminaTransitionSpeed.Value).SetEase(Ease.OutQuart);
+                rectTransform.DOAnchorPosX(xPos, WKStaminaSliderPlugin.staminaTransitionSpeed.Value)
+                    .SetEase(Ease.OutQuart);
             }
+        }
+
+        void OnColorValuesChanged()
+        {
+            GetComponent<Image>().color = WKStaminaSliderPlugin.staminaBackgroundColor.Value;
+
+            transform.GetChild(0).GetChild(0).GetComponent<Image>().color = WKStaminaSliderPlugin.staminaFillColor.Value;
+        }
+
+        void OnDestroy()
+        {
+            WKStaminaSliderPlugin.onColorConfigChange.RemoveListener(OnColorValuesChanged);
         }
     }
 }
