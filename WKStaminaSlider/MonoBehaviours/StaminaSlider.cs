@@ -23,12 +23,13 @@ namespace WKStaminaSlider.MonoBehaviours
             hidden = true;
             canvasGroup.alpha = 0;
             rectTransform = GetComponent<RectTransform>();
+
             initalPosition = rectTransform.anchoredPosition.x;
-            rectTransform.anchoredPosition = Vector2.zero; // Start animation fix
 
             WKStaminaSliderPlugin.onColorConfigChange.AddListener(OnColorValuesChanged);
 
             if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) Toggle();
+            else rectTransform.anchoredPosition = Vector2.zero; // Making it zero and calling toggle broke the transition off option
         }
 
         public void Update()
