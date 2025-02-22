@@ -1,4 +1,4 @@
-# Configurable Stamina Slider for White Knuckle+
+# Configurable Stamina Slider for White Knuckle
 
 ## Instalation
 You will need BepInEx 5!  
