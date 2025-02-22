@@ -22,17 +22,15 @@ namespace WKStaminaSlider
         public static ConfigEntry<Color> staminaBackgroundColor;
         public static ConfigEntry<Color> staminaFillColor;
 
-        public static UnityEvent onColorConfigChange = new UnityEvent();
+        public static UnityEvent onConfigChange = new UnityEvent();
 
-        const string colorBgKey = "Stamina Slider BG color";
-        const string colorFillKey = "Stamina Slider Fill color";
         void Awake()
         {
             staminaDistanceFromCenter = Config.Bind("General", "Stamina Slider Distance From Center", 150);
             staminaSliderTransitionEnabled = Config.Bind("General", "Stamina Slider Transiotion Enabled", true);
             staminaTransitionSpeed = Config.Bind("General", "Stamina Slider Transition Speed", 0.25f);
-            staminaBackgroundColor = Config.Bind("General", colorBgKey, new Color(1, 1, 1, 0.025f));
-            staminaFillColor = Config.Bind("General", colorFillKey, new Color(1, 1, 1, 0.05f));
+            staminaBackgroundColor = Config.Bind("General", "Stamina Slider BG color", new Color(1, 1, 1, 0.025f));
+            staminaFillColor = Config.Bind("General", "Stamina Slider Fill color", new Color(1, 1, 1, 0.05f));
 
             SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -45,11 +43,7 @@ namespace WKStaminaSlider
 
             if (settingChangedEventArgs == null) return;
 
-            if (settingChangedEventArgs.ChangedSetting.Definition.Key == colorBgKey || 
-                settingChangedEventArgs.ChangedSetting.Definition.Key == colorFillKey)
-            {
-                onColorConfigChange.Invoke();
-            }
+            onConfigChange.Invoke();
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)

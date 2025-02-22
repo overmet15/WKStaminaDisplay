@@ -26,10 +26,10 @@ namespace WKStaminaSlider.MonoBehaviours
 
             initalPosition = rectTransform.anchoredPosition.x;
 
-            WKStaminaSliderPlugin.onColorConfigChange.AddListener(OnColorValuesChanged);
+            WKStaminaSliderPlugin.onConfigChange.AddListener(OnConfigChange);
 
-            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) Toggle();
-            else rectTransform.anchoredPosition = Vector2.zero; // Making it zero and calling toggle broke the transition off option
+            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
+            else rectTransform.anchoredPosition = Vector2.zero;
         }
 
         public void Update()
@@ -41,8 +41,8 @@ namespace WKStaminaSlider.MonoBehaviours
 
             slider.value = hand.gripStrength;
 
-            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) return;
-
+            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value)  return;
+            
             if (hidden && hand.gripStrength < slider.maxValue) Toggle();
             else if (!hidden && hand.gripStrength >= slider.maxValue) Toggle();
         }
@@ -79,16 +79,32 @@ namespace WKStaminaSlider.MonoBehaviours
             }
         }
 
-        void OnColorValuesChanged()
+        void OnConfigChange()
         {
-            GetComponent<Image>().color = WKStaminaSliderPlugin.staminaBackgroundColor.Value;
+            // so if its changed it will pull it back
+            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
+            else if (!hidden)
+            {
+                hidden = true;
+                Toggle();
+            }
 
+            GetComponent<Image>().color = WKStaminaSliderPlugin.staminaBackgroundColor.Value;
             transform.GetChild(0).GetChild(0).GetComponent<Image>().color = WKStaminaSliderPlugin.staminaFillColor.Value;
+        }
+
+        void ForceInPlace()
+        {
+            int xPos = WKStaminaSliderPlugin.staminaDistanceFromCenter.Value;
+            if (isLeft) xPos *= -1;
+
+            canvasGroup.alpha = 1;
+            rectTransform.anchoredPosition = new Vector2(xPos, 0);
         }
 
         void OnDestroy()
         {
-            WKStaminaSliderPlugin.onColorConfigChange.RemoveListener(OnColorValuesChanged);
+            WKStaminaSliderPlugin.onConfigChange.RemoveListener(OnConfigChange);
         }
     }
 }
