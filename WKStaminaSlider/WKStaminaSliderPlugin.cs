@@ -26,8 +26,6 @@ namespace WKStaminaSlider
         /// </summary>
         private void Awake()
         {
-            Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
-
             staminaDistanceFromCenter = Config.Bind("General", "Stamina Slider Distance From Center", 150);
             staminaSliderTransitionEnabled = Config.Bind("General", "Stamina Slider Transiotion Enabled", true);
             staminaTransitionSpeed = Config.Bind("General", "Stamina Slider Transition Speed", 0.25f);
@@ -35,6 +33,8 @@ namespace WKStaminaSlider
             staminaFillColor = Config.Bind("General", "Stamina Slider Fill color", new Color(1, 1, 1, 0.05f));
 
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            Logger.LogInfo($"PluginName: {PluginName}, VersionString: {VersionString} is loaded.");
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
