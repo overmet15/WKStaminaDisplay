@@ -32,6 +32,8 @@ namespace WKStaminaSlider
             staminaBackgroundColor = Config.Bind("General", "Stamina Slider BG color", new Color(1, 1, 1, 0.025f));
             staminaFillColor = Config.Bind("General", "Stamina Slider Fill color", new Color(1, 1, 1, 0.05f));
 
+            staminaDistanceFromCenter.ConfigFile.SettingChanged += OnConfigChanged;
+
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             Logger.LogInfo($"{PluginName} v{VersionString} is loaded.");
