@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace WKStaminaSlider.MonoBehaviours
+namespace WKStaminaDisplay.MonoBehaviours
 {
     public class StaminaSlider : MonoBehaviour
     {
@@ -26,9 +26,9 @@ namespace WKStaminaSlider.MonoBehaviours
 
             initalPosition = rectTransform.anchoredPosition.x;
 
-            WKStaminaSliderPlugin.onConfigChange.AddListener(OnConfigChange);
+            Plugin.onConfigChange.AddListener(OnConfigChange);
 
-            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
+            if (!Plugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
             else rectTransform.anchoredPosition = Vector2.zero;
         }
 
@@ -41,7 +41,7 @@ namespace WKStaminaSlider.MonoBehaviours
 
             slider.value = hand.gripStrength;
 
-            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value)  return;
+            if (!Plugin.staminaSliderTransitionEnabled.Value)  return;
             
             if (hidden && hand.gripStrength < slider.maxValue) Toggle();
             else if (!hidden && hand.gripStrength >= slider.maxValue) Toggle();
@@ -60,7 +60,7 @@ namespace WKStaminaSlider.MonoBehaviours
         {
             hidden = !hidden;
 
-            int xPos = WKStaminaSliderPlugin.staminaDistanceFromCenter.Value;
+            int xPos = Plugin.staminaDistanceFromCenter.Value;
             if (isLeft) xPos *= -1;
 
             if (hidden)
@@ -68,13 +68,13 @@ namespace WKStaminaSlider.MonoBehaviours
                 canvasGroup.DOFade(0, 0.25f).SetEase(Ease.OutQuart);
 
                 rectTransform.DOAnchorPosX(xPos + (xPos < 0 ? 75 : -75),
-                    WKStaminaSliderPlugin.staminaTransitionSpeed.Value).SetEase(Ease.OutQuart);
+                    Plugin.staminaTransitionSpeed.Value).SetEase(Ease.OutQuart);
             }
             else
             {
                 canvasGroup.DOFade(1, 0.25f).SetEase(Ease.OutQuart);
 
-                rectTransform.DOAnchorPosX(xPos, WKStaminaSliderPlugin.staminaTransitionSpeed.Value)
+                rectTransform.DOAnchorPosX(xPos, Plugin.staminaTransitionSpeed.Value)
                     .SetEase(Ease.OutQuart);
             }
         }
@@ -82,20 +82,20 @@ namespace WKStaminaSlider.MonoBehaviours
         void OnConfigChange()
         {
             // so if its changed it will pull it back
-            if (!WKStaminaSliderPlugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
+            if (!Plugin.staminaSliderTransitionEnabled.Value) ForceInPlace();
             else if (!hidden)
             {
                 hidden = true;
                 Toggle();
             }
 
-            GetComponent<Image>().color = WKStaminaSliderPlugin.staminaBackgroundColor.Value;
-            transform.GetChild(0).GetChild(0).GetComponent<Image>().color = WKStaminaSliderPlugin.staminaFillColor.Value;
+            GetComponent<Image>().color = Plugin.staminaBackgroundColor.Value;
+            transform.GetChild(0).GetChild(0).GetComponent<Image>().color = Plugin.staminaFillColor.Value;
         }
 
         void ForceInPlace()
         {
-            int xPos = WKStaminaSliderPlugin.staminaDistanceFromCenter.Value;
+            int xPos = Plugin.staminaDistanceFromCenter.Value;
             if (isLeft) xPos *= -1;
 
             canvasGroup.alpha = 1;
@@ -104,7 +104,7 @@ namespace WKStaminaSlider.MonoBehaviours
 
         void OnDestroy()
         {
-            WKStaminaSliderPlugin.onConfigChange.RemoveListener(OnConfigChange);
+            Plugin.onConfigChange.RemoveListener(OnConfigChange);
         }
     }
 }

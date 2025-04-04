@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using WKStaminaSlider.MonoBehaviours;
+using WKStaminaDisplay.MonoBehaviours;
 
-namespace WKStaminaSlider
+namespace WKStaminaDisplay
 {
-    [BepInPlugin(MyGUID, PluginName, VersionString)]
-    public class WKStaminaSliderPlugin : BaseUnityPlugin // Its so funny how its actualy a MonoBehaviour
+    [BepInPlugin(guid, pluginName, versionString)]
+    public class Plugin : BaseUnityPlugin // Its so funny how its actualy a MonoBehaviour
     {
-        private const string MyGUID = "com.overmet15.WKStaminaSlider";
-        private const string PluginName = "WKStaminaSlider";
-        private const string VersionString = "1.1.0";
+        private const string guid = "com.overmet15.WKStaminaDisplay";
+        private const string pluginName = "WKStaminaDisplay";
+        public const string versionString = "1.0.0";
 
         // Stamina
         public static ConfigEntry<int> staminaDistanceFromCenter;
@@ -36,7 +36,7 @@ namespace WKStaminaSlider
 
             SceneManager.sceneLoaded += OnSceneLoaded;
 
-            Logger.LogInfo($"{PluginName} v{VersionString} is loaded.");
+            Logger.LogInfo($"{pluginName} v{versionString} is loaded.");
         }
 
         void OnConfigChanged(object sender, System.EventArgs e)
