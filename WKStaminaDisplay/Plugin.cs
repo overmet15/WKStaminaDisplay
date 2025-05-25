@@ -13,7 +13,7 @@ namespace WKStaminaDisplay
     {
         private const string guid = "com.overmet15.WKStaminaDisplay";
         private const string pluginName = "WKStaminaDisplay";
-        public const string versionString = "1.0.0";
+        public const string versionString = "1.0.1";
 
         // Stamina
         public static ConfigEntry<int> staminaDistanceFromCenter;
@@ -48,22 +48,29 @@ namespace WKStaminaDisplay
             onConfigChange.Invoke();
         }
 
+        // Im TOO lazy rewriting it to be a patch for `ENT_Player.Start`
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-            if (player == null)
+            if (player == null) return;
+
+            ENT_Player cl = player.GetComponent<ENT_Player>();
+
+            GameObject ui = GameObject.Find("GameManager/Canvas/Game UI");
+
+            Transform canvas;
+
+            if (ui != null) canvas = ui.transform;
+            else
             {
+                Logger.LogError("Canvas not found. Returning.");
                 return;
             }
 
-            CL_Player cl = player.GetComponent<CL_Player>();
-
-            Transform canvas = GameObject.Find("GameManager/Canvas/Game UI").transform;
-
             bool isFirst = true;
 
-            foreach (CL_Player.Hand hand in cl.hands)
+            foreach (ENT_Player.Hand hand in cl.hands)
             {
                 GameObject main = null;
 

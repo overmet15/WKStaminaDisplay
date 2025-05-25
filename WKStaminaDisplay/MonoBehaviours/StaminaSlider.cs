@@ -6,12 +6,11 @@ namespace WKStaminaDisplay.MonoBehaviours
 {
     public class StaminaSlider : MonoBehaviour
     {
-        CL_Player.Hand hand;
+        ENT_Player.Hand hand;
 
         RectTransform rectTransform;
         Slider slider;
         CanvasGroup canvasGroup;
-        float initalPosition;
 
         bool hidden;
 
@@ -24,7 +23,8 @@ namespace WKStaminaDisplay.MonoBehaviours
             canvasGroup.alpha = 0;
             rectTransform = GetComponent<RectTransform>();
 
-            initalPosition = rectTransform.anchoredPosition.x;
+            // uhh, why did i need this?
+            //initalPosition = rectTransform.anchoredPosition.x;
 
             Plugin.onConfigChange.AddListener(OnConfigChange);
 
@@ -36,8 +36,7 @@ namespace WKStaminaDisplay.MonoBehaviours
         {
             if (hand == null || slider == null) return;
 
-            // if they change it in future, idk how to get it manualy
-            if (slider.maxValue < hand.gripStrength) slider.maxValue = hand.gripStrength;
+            slider.maxValue = hand.GetPlayer().GetCurrentGripStrengthTimer();
 
             slider.value = hand.gripStrength;
 
@@ -47,7 +46,7 @@ namespace WKStaminaDisplay.MonoBehaviours
             else if (!hidden && hand.gripStrength >= slider.maxValue) Toggle();
         }
         
-        public void Setup(CL_Player.Hand hand, Slider slider, bool isLeft)
+        public void Setup(ENT_Player.Hand hand, Slider slider, bool isLeft)
         {
             this.hand = hand;
             this.slider = slider;
@@ -99,7 +98,7 @@ namespace WKStaminaDisplay.MonoBehaviours
             if (isLeft) xPos *= -1;
 
             canvasGroup.alpha = 1;
-            rectTransform.anchoredPosition = new Vector2(xPos, 0);
+            rectTransform.anchoredPosition.Set(xPos, 0);
         }
 
         void OnDestroy()
