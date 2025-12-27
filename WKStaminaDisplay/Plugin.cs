@@ -13,7 +13,7 @@ namespace WKStaminaDisplay
     {
         private const string guid = "com.overmet15.WKStaminaDisplay";
         private const string pluginName = "WKStaminaDisplay";
-        public const string versionString = "1.0.1";
+        public const string versionString = "1.0.2";
 
         // Stamina
         public static ConfigEntry<int> staminaDistanceFromCenter;
@@ -55,7 +55,13 @@ namespace WKStaminaDisplay
 
             if (player == null) return;
 
-            ENT_Player cl = player.GetComponent<ENT_Player>();
+            ENT_Player cl = FindObjectOfType<ENT_Player>();
+
+            if (!cl)
+            {
+                Logger.LogError("ENT_Player component not found, returning.");
+                return;
+            }
 
             GameObject ui = GameObject.Find("GameManager/Canvas/Game UI");
 
